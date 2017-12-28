@@ -6,15 +6,16 @@ namespace unpacksharp
 {
 	class MainClass
 	{
-		[DllImport("libv8unpack4rs.so")]
-		private static extern bool parse_cf(IntPtr pFileName, IntPtr pDirName);
+		[DllImport("libv8unpack4rs.so", CharSet = CharSet.Ansi)]
+		private static extern bool parse_cf(
+			string fileName,
+			string dirName);
 
 		public static void Main(string[] args)
 		{
 			if (args.Length < 3)
 			{
 				Usage();
-				Environment.Exit(-1);
 			}
 
 			string command = args[0];
@@ -24,14 +25,13 @@ namespace unpacksharp
 				string fileName = args[1];
 				string dirName = args[2];
 				
-				var pFileName = Marshal.StringToHGlobalAnsi(fileName);
-				var pDirName = Marshal.StringToHGlobalAnsi(dirName);
-				var resultParse = parse_cf(pFileName, pDirName);
+				var resultParse = parse_cf(fileName, dirName);
 				Console.WriteLine("parse_cf: {0}", resultParse);
 				
-				// Обязательно освобождаем память
-				Marshal.FreeHGlobal(pFileName);
-				Marshal.FreeHGlobal(pDirName);
+			}
+			else
+			{
+				Usage();
 			}
 			
 			//Console.ReadLine();
@@ -40,6 +40,7 @@ namespace unpacksharp
 		private static void Usage()
 		{
 			Console.WriteLine("unpacksharp --parse file_name dir_name");
+			Environment.Exit(-1);
 		}
 	}
 }
