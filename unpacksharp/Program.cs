@@ -24,10 +24,14 @@ namespace unpacksharp
 				string fileName = args[1];
 				string dirName = args[2];
 				
-				IntPtr pFileName = Marshal.StringToHGlobalAnsi(fileName);
-				IntPtr pDirName = Marshal.StringToHGlobalAnsi(dirName);
+				var pFileName = Marshal.StringToHGlobalAnsi(fileName);
+				var pDirName = Marshal.StringToHGlobalAnsi(dirName);
 				var resultParse = parse_cf(pFileName, pDirName);
 				Console.WriteLine("parse_cf: {0}", resultParse);
+				
+				// Обязательно освобождаем память
+				Marshal.FreeHGlobal(pFileName);
+				Marshal.FreeHGlobal(pDirName);
 			}
 			
 			//Console.ReadLine();
